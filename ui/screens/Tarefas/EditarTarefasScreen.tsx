@@ -13,7 +13,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import { createTask } from '../../../src/network/api/tasks/create-task';
 
-export default function CriarTarefasScreen({ navigation, route }) {
+export default function EditarTarefasScreen({ navigation, route }) {
   
   const { id } = route.params.projetoId;  // Receber o projectId passado como parâmetro de navegação
   const [nome, setNome] = useState('');
