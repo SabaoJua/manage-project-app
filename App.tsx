@@ -8,6 +8,7 @@ import CriarTarefasScreen from './ui/screens/Tarefas/CriarTarefasScreen';
 import ProjetosScreen from './ui/screens/Projetos/ProjetosScreen';
 import ProjetoDetalhesScreen from './ui/screens/Projetos/ProjetoDetalhesScreen';
 import CriarProjetoScreen from './ui/screens/Projetos/CriarProjetosScreen';
+import EditarTarefasScreen from './ui/screens/Tarefas/EditarTarefasScreen';
 
 
 
@@ -23,6 +24,7 @@ export default function App() {
         <Stack.Screen name="Criar Projetos" component={CriarProjetoScreen} />
         {/* <Stack.Screen name="Tarefas" component={TarefasScreen} /> */}
         <Stack.Screen name="Detalhes do Projeto" component={ProjetoDetalhesScreen} />
+        <Stack.Screen name="Editar Tarefa" component={EditarTarefasScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -32,7 +32,9 @@ export default function ProjetoDetalhesScreen({ route, navigation }) {
 
   const renderTask = ({ item }) => (
     <TouchableOpacity
-    onPress={()=>{}}
+    onPress={()=>{navigation.navigate('Editar Tarefa', {
+      task: item,
+    })}}
     >
  <View style={styles.taskCard}>
       <Text style={styles.taskTitle}>{item.name}</Text>

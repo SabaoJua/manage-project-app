@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,68 +7,39 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
-import { createTask } from '../../../src/network/api/tasks/create-task';
+import { useRoute } from '@react-navigation/native';
+import { editTask } from '../../../src/network/api/tasks/edit-tasks';
 
-export default function EditarTarefasScreen({ navigation, route }) {
+export default function EditarTarefasScreen({ navigation }) {
+
+  const route = useRoute();
+
+  const taskId = route.params.task.id;
   
-  const { id } = route.params.projetoId;  // Receber o projectId passado como parâmetro de navegação
-  const [nome, setNome] = useState('');
-  const [status, setStatus] = useState('backlog');
-  const [dataEntrega, setDataEntrega] = useState(new Date());
-  const [responsavel, setResponsavel] = useState('');
-  const [tag, setTag] = useState('');
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [status, setStatus] = useState(route.params.task.status);
+  const [responsavel, setResponsavel] = useState(route.params.task.responsible);
 
-  console.log(route.params.projetoId)
-  const handleSaveTask = async () => {
+  const handleUpdateTask = async () => {
     try {
       const taskData = {
-        name: nome,
         status: status,
-        date: dataEntrega.toISOString(),  
         responsible: responsavel,
-        tag: tag,
       };
 
-      const result = await createTask(route.params.projetoId , taskData);
+      const result = await editTask(taskId , taskData);
       console.log('Tarefa criada com sucesso:', result);
-      alert("Tarrefa criada com sucesso")
+      alert("Tarefa editada com sucesso")
       navigation.goBack();  
     } catch (error) {
-      console.error('Erro ao criar a tarefa:', error);
-      alert('Erro ao criar a tarefa. Tente novamente.');
+      console.error('Erro ao editar a tarefa:', error);
+      alert('Erro ao editar a tarefa. Tente novamente.');
     }
   };
 
-
-
-/* 
-  const handleSaveTask = () => {
-    console.log({
-      nome,
-      status,
-      dataEntrega: dataEntrega.toLocaleDateString(),
-      responsavel,
-      tag,
-    });
-    navigation.goBack();
-  }; */
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Criar Nova Tarefa</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Nome da Tarefa"
-        placeholderTextColor="#aaa"
-        value={nome}
-        onChangeText={setNome}
-      />
+      <Text style={styles.title}>Editar Tarefa</Text>
 
       <View style={styles.pickerContainer}>
         <Text style={styles.label}>Status</Text>
@@ -85,28 +56,6 @@ export default function EditarTarefasScreen({ navigation, route }) {
         </Picker>
       </View>
 
-      <TouchableOpacity
-        style={styles.datePicker}
-        onPress={() => setShowDatePicker(true)}
-      >
-        <Text style={styles.dateText}>
-          Data de Entrega: {dataEntrega.toLocaleDateString()}
-        </Text>
-      </TouchableOpacity>
-      {showDatePicker && (
-        <DateTimePicker
-          value={dataEntrega}
-          mode="date"
-          display="calendar"
-          onChange={(event, selectedDate) => {
-            setShowDatePicker(false);
-            if (selectedDate) {
-              setDataEntrega(selectedDate);
-            }
-          }}
-        />
-      )}
-
       <TextInput
         style={styles.input}
         placeholder="Responsável"
@@ -115,15 +64,7 @@ export default function EditarTarefasScreen({ navigation, route }) {
         onChangeText={setResponsavel}
       />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Tag (ex: urgente, design)"
-        placeholderTextColor="#aaa"
-        value={tag}
-        onChangeText={setTag}
-      />
-
-      <TouchableOpacity style={styles.saveButton} onPress={handleSaveTask}>
+      <TouchableOpacity style={styles.saveButton} onPress={handleUpdateTask}>
         <Text style={styles.saveButtonText}>Salvar Tarefa</Text>
       </TouchableOpacity>
     </View>

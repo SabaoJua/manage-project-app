@@ -12,7 +12,6 @@ export const createTask = async (
   }
 ) => {
 
-    console.log("TASK AQUI => ", id);
     try {
         const endpoint = `${config.url}api/projects/${id}/tasks`;
         console.log('Enviando dados da tarefa:', JSON.stringify(task));
