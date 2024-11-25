@@ -3,7 +3,7 @@ import { config } from "../../../../config";
 export const createProjeto = async (projeto: { name: string; status: string; duration: number }) => {
   try {
     const endpoint = `${config.url}api/projects`;
-    console.log('Enviando dados:', JSON.stringify(projeto)); // Log para diagnóstico
+    console.log('Enviando dados:', JSON.stringify(projeto)); 
     
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -14,7 +14,7 @@ export const createProjeto = async (projeto: { name: string; status: string; dur
     });
 
     if (!response.ok) {
-      const errorText = await response.text(); // Captura o erro detalhado
+      const errorText = await response.text(); 
       console.error('Erro ao criar projeto - Detalhes:', errorText);
       throw new Error(`Erro ao criar projeto: ${response.status}`);
     }

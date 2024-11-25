@@ -1,10 +1,48 @@
-
 import { AntDesign } from '@expo/vector-icons';
-import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, ScrollView, FlatList, TouchableOpacity } from 'react-native';
+import { listTasks } from '../../../src/network/api/tasks/list-tasks';
 
 export default function ProjetoDetalhesScreen({ route, navigation }) {
   const { projeto } = route.params;
+  const { id } = projeto; // Recebe o ID do projeto
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+
+    const unsubscribe = navigation.addListener('focus', () => {
+          const fetchAndSetTasks = async () => {
+      try {
+        console.log("id: ", projeto.id);
+        const data = await listTasks(projeto.id);
+        setTasks(data.items);
+      } catch (error) {
+        console.error('Erro ao buscar tarefas:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAndSetTasks();
+    });
+    return unsubscribe;
+
+  }, [id]);;
+
+  const renderTask = ({ item }) => (
+    <TouchableOpacity
+    onPress={()=>{}}
+    >
+ <View style={styles.taskCard}>
+      <Text style={styles.taskTitle}>{item.name}</Text>
+      <Text style={styles.taskTag}>{item.status}</Text>
+      <Text style={styles.taskDate}>📅 {item.date}</Text>
+      <Text style={styles.taskResponsible}>👤 {item.responsible}</Text>
+    </View>     
+    </TouchableOpacity>
+    
+  );
 
   return (
     <ScrollView style={styles.container}>
@@ -39,19 +77,29 @@ export default function ProjetoDetalhesScreen({ route, navigation }) {
       </View>
 
       <View style={styles.section}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Criar Tarefas')}
-        style={styles.botaoAdicionar}
-      >
-        <AntDesign name="plus" size={32} color="#0079eb" />
-      </TouchableOpacity>
+      <View style={{flexDirection: 'row', alignContent: 'center', justifyContent: 'space-between', alignItems:'center'}}>
+
         <Text style={styles.sectionTitle}>Tarefas</Text>
-        {projeto.tarefas && projeto.tarefas.length > 0 ? (
-          projeto.tarefas.map((tarefa, index) => (
-            <Text key={index} style={styles.sectionContent}>
-              - {tarefa}
-            </Text>
-          ))
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Criar Tarefas', { projetoId: projeto.id })}
+          style={styles.botaoAdicionar}
+        >
+          <AntDesign name="plus" size={24} color="#0079eb" />
+        </TouchableOpacity>
+      </View>
+
+
+        {loading ? (
+          <Text style={styles.sectionContent}>Carregando tarefas...</Text>
+        ) : tasks.length > 0 ? (
+          <FlatList
+            data={tasks}
+            keyExtractor={(item) => item.id}
+            renderItem={renderTask}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.taskList}
+          />
         ) : (
           <Text style={styles.sectionContent}>Sem tarefas associadas.</Text>
         )}
@@ -119,6 +167,50 @@ const styles = StyleSheet.create({
     width: '50%',
     alignSelf: 'center',
   },
+  taskList: {
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+  },
+  taskCard: {
+    backgroundColor: '#0079eb',
+    borderRadius: 8,
+    padding: 16,
+    marginRight: 12,
+    gap: 8,
+    width: 200,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  taskTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 8,
+  },
+  taskTag: {
+    fontSize: 14,
+    color: '#d1f7ff',
+    marginBottom: 8,
+  },
+  taskDate: {
+    fontSize: 14,
+    color: '#fff',
+    marginBottom: 4,
+  },
+  taskResponsible: {
+    fontSize: 14,
+    color: '#fff',
+  },
+  botaoAdicionar: {
+    borderWidth: 1,
+    borderColor: '#0079eb',
+    borderRadius: 16,
+    padding: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  },
   botaoEditar: {
     backgroundColor: '#4A90E2',
     padding: 12,
@@ -131,53 +223,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
- botaoAdicionar: {
-    position: 'absolute',
-    bottom: 16,
-    right: 16,
-    borderWidth: 1,
-    borderColor: '#0079eb',
-    borderRadius: 16,
-    padding: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-  },
 });
-
-/* import { AntDesign } from "@expo/vector-icons";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
-export default function ProjetoDetalhesScreen({navigation}) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Projeto detalhes</Text>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Criar Tarefas')}
-        style={styles.botaoAdicionar}
-      >
-        <AntDesign name="plus" size={32} color="blue" />
-      </TouchableOpacity>
-      </View>
-    );
-  }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  listaContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  botaoAdicionar: {
-    position: 'absolute',
-    bottom: 16,
-    right: 16,
-    borderWidth: 1,
-    borderColor: 'blue',
-    borderRadius: 16,
-    padding: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-  },
-});
- */

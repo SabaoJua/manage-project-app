@@ -5,20 +5,48 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
+import { createTask } from '../../../src/network/api/tasks/create-task';
 
-export default function CriarTarefasScreen({ navigation }) {
+export default function CriarTarefasScreen({ navigation, route }) {
+  
+  const { id } = route.params;  // Receber o projectId passado como parâmetro de navegação
   const [nome, setNome] = useState('');
-  const [status, setStatus] = useState('Backlog');
+  const [status, setStatus] = useState('backlog');
   const [dataEntrega, setDataEntrega] = useState(new Date());
   const [responsavel, setResponsavel] = useState('');
   const [tag, setTag] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+
+  const handleSaveTask = async () => {
+    try {
+      const taskData = {
+        name: nome,
+        status: status,
+        date: dataEntrega.toISOString(),  
+        responsible: responsavel,
+        tag: tag,
+      };
+
+      const result = await createTask(id , taskData);
+      console.log('Tarefa criada com sucesso:', result);
+      alert("Tarrefa criada com sucesso")
+      navigation.goBack();  
+    } catch (error) {
+      console.error('Erro ao criar a tarefa:', error);
+      alert('Erro ao criar a tarefa. Tente novamente.');
+    }
+  };
+
+
+
+/* 
   const handleSaveTask = () => {
     console.log({
       nome,
@@ -28,7 +56,7 @@ export default function CriarTarefasScreen({ navigation }) {
       tag,
     });
     navigation.goBack();
-  };
+  }; */
 
   return (
     <View style={styles.container}>
@@ -49,11 +77,11 @@ export default function CriarTarefasScreen({ navigation }) {
           onValueChange={(itemValue) => setStatus(itemValue)}
           style={styles.picker}
         >
-          <Picker.Item label="Backlog" value="Backlog" />
-          <Picker.Item label="To Do" value="To Do" />
-          <Picker.Item label="In Progress" value="In Progress" />
-          <Picker.Item label="Review" value="Review" />
-          <Picker.Item label="Done" value="Done" />
+          <Picker.Item label="Backlog" value="backlog" />
+          <Picker.Item label="To Do" value="to do" />
+          <Picker.Item label="In Progress" value="in progress" />
+          <Picker.Item label="Review" value="review" />
+          <Picker.Item label="Done" value="done" />
         </Picker>
       </View>
 
