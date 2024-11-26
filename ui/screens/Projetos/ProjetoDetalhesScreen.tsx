@@ -2,6 +2,7 @@ import { AntDesign } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import { listTasks } from '../../../src/network/api/tasks/list-tasks';
+import { Colors } from '../../colors/colors';
 
 export default function ProjetoDetalhesScreen({ route, navigation }) {
   const { projeto } = route.params;
@@ -59,29 +60,29 @@ export default function ProjetoDetalhesScreen({ route, navigation }) {
         </Text>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Status</Text>
+      <View style={[styles.section, {flexDirection:'row', alignItems:'center', gap:16}]}>
+        <Text style={[styles.sectionTitle,{ marginBottom: -8}]}>Status</Text>
         <Text style={styles.status}>{projeto.status || 'Não definido'}</Text>
       </View>
 
-      <View style={styles.section}>
+      {/* <View style={styles.section}>
         <Text style={styles.sectionTitle}>Responsável</Text>
         <Text style={styles.sectionContent}>
           {projeto.responsavel || 'Sem responsável atribuído'}
         </Text>
-      </View>
+      </View> */}
 
-      <View style={styles.section}>
+      {/* <View style={styles.section}>
         <Text style={styles.sectionTitle}>Data de Criação</Text>
         <Text style={styles.sectionContent}>
           {projeto.dataCriacao || 'Não definida'}
         </Text>
-      </View>
+      </View> */}
 
       <View style={styles.section}>
       <View style={{flexDirection: 'row', alignContent: 'center', justifyContent: 'space-between', alignItems:'center'}}>
 
-        <Text style={styles.sectionTitle}>Tarefas</Text>
+        <Text style={[styles.sectionTitle,]}>Tarefas</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('Criar Tarefas', { projetoId: projeto.id })}
           style={styles.botaoAdicionar}
@@ -107,12 +108,6 @@ export default function ProjetoDetalhesScreen({ route, navigation }) {
         )}
       </View>
 
-      <TouchableOpacity
-        style={styles.botaoEditar}
-        onPress={() => navigation.navigate('EditarProjeto', { projeto })}
-      >
-        <Text style={styles.botaoTexto}>Editar Projeto</Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -124,7 +119,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   header: {
-    backgroundColor: '#4A90E2',
+    backgroundColor: Colors.primary,
     borderRadius: 8,
     padding: 20,
     marginBottom: 16,
@@ -166,7 +161,6 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 8,
     textAlign: 'center',
-    width: '50%',
     alignSelf: 'center',
   },
   taskList: {

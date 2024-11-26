@@ -1,68 +1,132 @@
-import * as React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StatusBar } from 'expo-status-bar';
-import { AntDesign } from '@expo/vector-icons';
-import CriarTarefasScreen from './ui/screens/Tarefas/CriarTarefasScreen';
-import ProjetosScreen from './ui/screens/Projetos/ProjetosScreen';
-import ProjetoDetalhesScreen from './ui/screens/Projetos/ProjetoDetalhesScreen';
-import CriarProjetoScreen from './ui/screens/Projetos/CriarProjetosScreen';
-import EditarTarefasScreen from './ui/screens/Tarefas/EditarTarefasScreen';
+import * as React from "react";
+import { AntDesign } from "@expo/vector-icons";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
+import CriarTarefasScreen from "./ui/screens/Tarefas/CriarTarefasScreen";
+import ProjetosScreen from "./ui/screens/Projetos/ProjetosScreen";
+import ProjetoDetalhesScreen from "./ui/screens/Projetos/ProjetoDetalhesScreen";
+import CriarProjetoScreen from "./ui/screens/Projetos/CriarProjetosScreen";
+import EditarTarefasScreen from "./ui/screens/Tarefas/EditarTarefasScreen";
+import { Colors } from "./ui/colors/colors";
+import DashboardScreen from "./ui/screens/Dashboard/DashboardScreen";
 
-
-
+// Criando os navegadores
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
 
-export default function App() {
+// Navegação de Projetos
+function ProjetosStack() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Projetos">
-        <Stack.Screen name="Projetos" component={ProjetosScreen} />
-        <Stack.Screen name="Criar Tarefas" component={CriarTarefasScreen} />
-        <Stack.Screen name="Criar Projetos" component={CriarProjetoScreen} />
-        {/* <Stack.Screen name="Tarefas" component={TarefasScreen} /> */}
-        <Stack.Screen name="Detalhes do Projeto" component={ProjetoDetalhesScreen} />
-        <Stack.Screen name="Editar Tarefa" component={EditarTarefasScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator initialRouteName="Projetos">
+      {/* Tela inicial com o menu hambúrguer */}
+      <Stack.Screen
+        name="Projetos"
+        component={ProjetosScreen}
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <AntDesign
+              name="menu-fold"
+              size={24}
+              color="white"
+              onPress={() => navigation.toggleDrawer()}
+              style={{ marginLeft: 16 }}
+            />
+          ),
+          title: "Projetos",
+          headerStyle: {
+            backgroundColor: Colors.primary,
+          },
+          headerTintColor: "#fff",
+        })}
+      />
+      {/* Telas sem o menu hambúrguer */}
+      <Stack.Screen
+        name="Criar Tarefas"
+        component={CriarTarefasScreen}
+        options={{
+          title: "Criar Tarefas",
+          headerBackTitle: "Voltar",
+          headerStyle: {
+            backgroundColor: "#0079eb",
+          },
+          headerTintColor: "#fff",
+        }}
+      />
+      <Stack.Screen
+        name="Criar Projetos"
+        component={CriarProjetoScreen}
+        options={{
+          title: "Criar Projetos",
+          headerBackTitle: "Voltar",
+          headerStyle: {
+            backgroundColor: "#0079eb",
+          },
+          headerTintColor: "#fff",
+        }}
+      />
+      <Stack.Screen
+        name="Detalhes do Projeto"
+        component={ProjetoDetalhesScreen}
+        options={{
+          title: "Detalhes do Projeto",
+          headerBackTitle: "Voltar",
+          headerStyle: {
+            backgroundColor: "#0079eb",
+          },
+          headerTintColor: "#fff",
+        }}
+      />
+      <Stack.Screen
+        name="Editar Tarefa"
+        component={EditarTarefasScreen}
+        options={{
+          title: "Editar Tarefa",
+          headerBackTitle: "Voltar",
+          headerStyle: {
+            backgroundColor: Colors.primary,
+          },
+          headerTintColor: "#fff",
+        }}
+      />
+    </Stack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  listaContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  projetoContainer: {
-    backgroundColor: 'white',
-    padding: 16,
-    marginVertical: 8,
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  projetoTexto: {
-    fontSize: 16,
-    color: 'black',
-  },
-  botaoAdicionar: {
-    position: 'absolute',
-    bottom: 16,
-    right: 16,
-    borderWidth: 1,
-    borderColor: '#0079eb',
-    borderRadius: 16,
-    padding: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-  },
-});
+// Drawer Navigator
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Drawer.Navigator
+        screenOptions={{
+          drawerStyle: {
+            backgroundColor: "#f5f5f5",
+            width: 240,
+          },
+          headerShown: false, // Esconde o cabeçalho padrão do Drawer
+        }}
+      >
+        {/* Navegação do menu hambúrguer */}
+        <Drawer.Screen
+          name="Projetos"
+          component={ProjetosStack}
+          options={{
+            drawerIcon: ({ color, size }) => (
+              <AntDesign name="home" size={size} color={color} />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="Dashboard"
+          component={DashboardScreen}
+          options={{
+            drawerIcon: ({ color, size }) => (
+              <AntDesign name="dashboard" size={size} color={color} />
+            ),
+          }}
+        />
+      </Drawer.Navigator>
+    </NavigationContainer>
+  );
+}

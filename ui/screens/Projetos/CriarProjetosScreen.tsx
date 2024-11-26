@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { createProjeto } from '../../../src/network/api/projets/create-project';
 
@@ -34,7 +34,8 @@ export default function CriarProjetoScreen({ navigation }) {
 
 
   return (
-    <View style={styles.container}>
+    <ScrollView>
+ <View style={styles.container}>
       <Text style={styles.title}>Criar Novo Projeto</Text>
 
       <View style={styles.formContainer}>
@@ -70,7 +71,9 @@ export default function CriarProjetoScreen({ navigation }) {
       <TouchableOpacity onPress={salvarProjeto} style={styles.botaoSalvar}>
         <Text style={styles.botaoTexto}>Salvar Projeto</Text>
       </TouchableOpacity>
-    </View>
+    </View>     
+    </ScrollView>
+    
   );
 }
 
