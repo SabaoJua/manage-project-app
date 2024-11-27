@@ -34,7 +34,7 @@ export default function ProjetosScreen({ navigation } : {navigation : any}) {
     navigation.navigate("Detalhes do Projeto", { projeto });
   };
 
-  const projetosFiltrados = projetos.filter((projeto) => projeto.status === filtro);
+  /* const projetosFiltrados = projetos.filter((projeto) => projeto.status === filtro);
 
   const contagemProjetos = {
     aguardando: projetos.filter((projeto) => projeto.status === "aguardando").length,
@@ -42,13 +42,13 @@ export default function ProjetosScreen({ navigation } : {navigation : any}) {
       (projeto) => projeto.status === "em desenvolvimento"
     ).length,
     desenvolvido: projetos.filter((projeto) => projeto.status === "desenvolvido").length,
-  };
+  } */;
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
 
-      <View style={styles.filtroContainer}>
+      {/* <View style={styles.filtroContainer}>
         {["aguardando", "em desenvolvimento", "desenvolvido"].map((status) => (
           <TouchableOpacity
             key={status}
@@ -75,10 +75,10 @@ export default function ProjetosScreen({ navigation } : {navigation : any}) {
             </View>
           </TouchableOpacity>
         ))}
-      </View>
+      </View> */}
 
       <FlatList
-        data={projetosFiltrados}
+        data={projetos}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => handleProjetoPress(item)}>
